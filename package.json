@@ -8,8 +8,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/withastro/astro.git",
-    "directory": "packages/integrations/netlify"
+    "url": "https://github.com/e-xisto/astro-netlify"
   },
   "keywords": [
     "withastro",
