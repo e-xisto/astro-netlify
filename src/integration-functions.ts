@@ -4,8 +4,8 @@ import { createRedirects } from './shared.js';
 
 export function getAdapter(args: Args = {}): AstroAdapter {
 	return {
-		name: '@astrojs/netlify/functions',
-		serverEntrypoint: '@astrojs/netlify/netlify-functions.js',
+		name: '@e-xisto/astro-netlify/functions',
+		serverEntrypoint: '@e-xisto/astro-netlify/netlify-functions.js',
 		exports: ['handler'],
 		args,
 	};
@@ -24,7 +24,7 @@ function netlifyFunctions({
 	let entryFile: string;
 	let needsBuildConfig = false;
 	return {
-		name: '@astrojs/netlify',
+		name: '@e-xisto/astro-netlify',
 		hooks: {
 			'astro:config:setup': ({ config, updateConfig }) => {
 				needsBuildConfig = !config.build.client;
@@ -33,7 +33,7 @@ function netlifyFunctions({
 					outDir,
 					build: {
 						client: outDir,
-						server: new URL('./.netlify/functions-internal/', config.root),
+						server: new URL('./functions/', config.root),
 					},
 				});
 			},
@@ -43,21 +43,21 @@ function netlifyFunctions({
 				entryFile = config.build.serverEntry.replace(/\.m?js/, '');
 
 				if (config.output === 'static') {
-					console.warn(`[@astrojs/netlify] \`output: "server"\` is required to use this adapter.`);
+					console.warn(`[@e-xisto/astro-netlify] \`output: "server"\` is required to use this adapter.`);
 					console.warn(
-						`[@astrojs/netlify] Otherwise, this adapter is not required to deploy a static site to Netlify.`
+						`[@e-xisto/astro-netlify] Otherwise, this adapter is not required to deploy a static site to Netlify.`
 					);
 				}
 			},
 			'astro:build:start': ({ buildConfig }) => {
 				if (needsBuildConfig) {
 					buildConfig.client = _config.outDir;
-					buildConfig.server = new URL('./.netlify/functions-internal/', _config.root);
+					buildConfig.server = new URL('./functions/', _config.root);
 					entryFile = buildConfig.serverEntry.replace(/\.m?js/, '');
 				}
 			},
 			'astro:build:done': async ({ routes, dir }) => {
-				await createRedirects(routes, dir, entryFile, false);
+				await createRedirects(routes, dir, entryFile, 'functions');
 			},
 		},
 	};
