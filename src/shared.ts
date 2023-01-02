@@ -5,37 +5,21 @@ export async function createRedirects(
 	routes: RouteData[],
 	dir: URL,
 	entryFile: string,
-	edge: boolean
+	type: 'functions' | 'edge-functions' | 'builders'
 ) {
 	const _redirectsURL = new URL('./_redirects', dir);
-	const kind = edge ? 'edge-functions' : 'functions';
+	const kind = type ?? 'builders';
 
 	// Create the redirects file that is used for routing.
 	let _redirects = '';
 	for (const route of routes) {
-		if (route.pathname) {
-			if (route.distURL) {
-				_redirects += `
-  ${route.pathname}   /${route.distURL.toString().replace(dir.toString(), '')}    200`;
-			} else {
-				_redirects += `
-  ${route.pathname}    /.netlify/${kind}/${entryFile}    200`;
 
-				if (route.route === '/404') {
-					_redirects += `
-  /*    /.netlify/${kind}/${entryFile}    404`;
-				}
-			}
+		if (route.pathname) {
+			if (!route.distURL) _redirects += `${route.pathname}    /.netlify/${kind}/${entryFile}    200`;
 		} else {
 			const pattern =
 				'/' + route.segments.map(([part]) => (part.dynamic ? '*' : part.content)).join('/');
-			if (route.distURL) {
-				_redirects += `
-  ${pattern}   /${route.distURL.toString().replace(dir.toString(), '')}    200`;
-			} else {
-				_redirects += `
-  ${pattern}    /.netlify/${kind}/${entryFile}    200`;
-			}
+			if (!route.distURL) _redirects += `${pattern}    /.netlify/${kind}/${entryFile}    200`;
 		}
 	}
 
