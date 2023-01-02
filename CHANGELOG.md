@@ -9,9 +9,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 
-### Changed
-- update git repository in package.json
 
+
+## [0.0.2] - 2023-01-02
+
+### Added
+- Included Netlify builders integration
+
+ 
+### Changed
+- Update git repository in package.json
+- Build functions path to `./functions/` for default
+- Statics routes not included in `_redirects`
+
+### Fixed
+- Change name and serverEntrypoint to `@e-xisto/astro-netlify` in integrations
 
 
 ## [0.0.1] - 2022-12-31

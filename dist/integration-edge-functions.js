@@ -9,8 +9,8 @@ const SHIM = `globalThis.process = {
 };`;
 export function getAdapter() {
     return {
-        name: '@astrojs/netlify/edge-functions',
-        serverEntrypoint: '@astrojs/netlify/netlify-edge-functions.js',
+        name: '@e-xisto/astro-netlify/edge-functions',
+        serverEntrypoint: '@e-xisto/astro-netlify/netlify-edge-functions.js',
         exports: ['default'],
     };
 }
@@ -75,13 +75,13 @@ export function netlifyEdgeFunctions({ dist } = {}) {
     let needsBuildConfig = false;
     let _vite;
     return {
-        name: '@astrojs/netlify/edge-functions',
+        name: '@e-xisto/astro-netlify/edge-functions',
         hooks: {
             'astro:config:setup': ({ config, updateConfig }) => {
                 needsBuildConfig = !config.build.client;
                 // Add a plugin that shims the global environment.
                 const injectPlugin = {
-                    name: '@astrojs/netlify/plugin-inject',
+                    name: '@e-xisto/astro-netlify/plugin-inject',
                     generateBundle(_options, bundle) {
                         if (_buildConfig.serverEntry in bundle) {
                             const chunk = bundle[_buildConfig.serverEntry];
@@ -96,7 +96,7 @@ export function netlifyEdgeFunctions({ dist } = {}) {
                     outDir,
                     build: {
                         client: outDir,
-                        server: new URL('./.netlify/edge-functions/', config.root),
+                        server: new URL('./functions/', config.root),
                         serverEntry: 'entry.js',
                     },
                     vite: {
@@ -110,14 +110,14 @@ export function netlifyEdgeFunctions({ dist } = {}) {
                 _buildConfig = config.build;
                 entryFile = config.build.serverEntry.replace(/\.m?js/, '');
                 if (config.output === 'static') {
-                    console.warn(`[@astrojs/netlify] \`output: "server"\` is required to use this adapter.`);
-                    console.warn(`[@astrojs/netlify] Otherwise, this adapter is not required to deploy a static site to Netlify.`);
+                    console.warn(`[@e-xisto/astro-netlify] \`output: "server"\` is required to use this adapter.`);
+                    console.warn(`[@e-xisto/astro-netlify] Otherwise, this adapter is not required to deploy a static site to Netlify.`);
                 }
             },
             'astro:build:start': ({ buildConfig }) => {
                 if (needsBuildConfig) {
                     buildConfig.client = _config.outDir;
-                    buildConfig.server = new URL('./.netlify/edge-functions/', _config.root);
+                    buildConfig.server = new URL('./functions/', _config.root);
                     buildConfig.serverEntry = 'entry.js';
                     _buildConfig = buildConfig;
                     entryFile = buildConfig.serverEntry.replace(/\.m?js/, '');
@@ -145,7 +145,7 @@ export function netlifyEdgeFunctions({ dist } = {}) {
             'astro:build:done': async ({ routes, dir }) => {
                 await bundleServerEntry(_buildConfig, _vite);
                 await createEdgeManifest(routes, entryFile, _config.root);
-                await createRedirects(routes, dir, entryFile, true);
+                await createRedirects(routes, dir, entryFile, 'edge-functions');
             },
         },
     };

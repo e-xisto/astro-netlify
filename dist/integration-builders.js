@@ -1,8 +1,8 @@
 import { createRedirects } from './shared.js';
 export function getAdapter(args = {}) {
     return {
-        name: '@e-xisto/astro-netlify/functions',
-        serverEntrypoint: '@e-xisto/astro-netlify/netlify-functions.js',
+        name: '@e-xisto/astro-netlify/builders',
+        serverEntrypoint: '@e-xisto/astro-netlify/netlify-builders.js',
         exports: ['handler'],
         args,
     };
@@ -42,7 +42,7 @@ function netlifyFunctions({ dist, binaryMediaTypes, } = {}) {
                 }
             },
             'astro:build:done': async ({ routes, dir }) => {
-                await createRedirects(routes, dir, entryFile, 'functions');
+                await createRedirects(routes, dir, entryFile, 'builders');
             },
         },
     };
