@@ -15,11 +15,13 @@ export async function createRedirects(
 	for (const route of routes) {
 
 		if (route.pathname) {
-			if (!route.distURL) _redirects += `${route.pathname}    /.netlify/${kind}/${entryFile}    200`;
+			if (!route.distURL) _redirects += `
+${route.pathname}    /.netlify/${kind}/${entryFile}    200`;
 		} else {
 			const pattern =
 				'/' + route.segments.map(([part]) => (part.dynamic ? '*' : part.content)).join('/');
-			if (!route.distURL) _redirects += `${pattern}    /.netlify/${kind}/${entryFile}    200`;
+			if (!route.distURL) _redirects += `
+${pattern}    /.netlify/${kind}/${entryFile}    200`;
 		}
 	}
 

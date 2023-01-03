@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 
+## [0.0.3] - 2023-01-03
+
+### Fixed
+- Write redirects in a new line
+
+
 ## [0.0.2] - 2023-01-02
 
 ### Added
