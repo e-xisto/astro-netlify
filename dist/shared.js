@@ -7,12 +7,14 @@ export async function createRedirects(routes, dir, entryFile, type) {
     for (const route of routes) {
         if (route.pathname) {
             if (!route.distURL)
-                _redirects += `${route.pathname}    /.netlify/${kind}/${entryFile}    200`;
+                _redirects += `
+${route.pathname}    /.netlify/${kind}/${entryFile}    200`;
         }
         else {
             const pattern = '/' + route.segments.map(([part]) => (part.dynamic ? '*' : part.content)).join('/');
             if (!route.distURL)
-                _redirects += `${pattern}    /.netlify/${kind}/${entryFile}    200`;
+                _redirects += `
+${pattern}    /.netlify/${kind}/${entryFile}    200`;
         }
     }
     // Always use appendFile() because the redirects file could already exist,
