@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [unreleased]
 
 
+## [0.0.5] - 2023-01-03
+
+### Fixed
+- Fix `tsconfig.json` and build
+
+
 ## [0.0.4] - 2023-01-03
 
 ### Fixed

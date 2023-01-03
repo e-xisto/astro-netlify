@@ -1,7 +1,7 @@
 {
   "name": "@e-xisto/astro-netlify",
   "description": "Deploy your site to Netlify",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "types": "./dist/index.d.ts",
   "author": "existo",
@@ -13,8 +13,8 @@
   "keywords": [
     "withastro",
     "astro-adapter",
-	"netlify"
-  ], 
+    "netlify"
+  ],
   "exports": {
     ".": "./dist/index.js",
     "./functions": "./dist/integration-functions.js",
