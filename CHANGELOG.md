@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ---
 
-## [unreleased]
+## [2.0.0-beta.1] - 2023-01-09
+
+### Updated
+- Updated to versión `astro@2.0.0-beta.1`
 
 
 ## [0.0.5] - 2023-01-03

@@ -100,7 +100,7 @@ async function bundleServerEntry({ serverEntry, server }: BuildConfig, vite: any
 	// Remove chunks, if they exist. Since we have bundled via esbuild these chunks are trash.
 	try {
 		const chunkFileNames =
-			vite?.build?.rollupOptions?.output?.chunkFileNames ?? 'chunks/chunk.[hash].mjs';
+			vite?.build?.rollupOptions?.output?.chunkFileNames ?? 'assets/chunks/chunk.[hash].mjs';
 		const chunkPath = npath.dirname(chunkFileNames);
 		const chunksDirUrl = new URL(chunkPath + '/', server);
 		await fs.promises.rm(chunksDirUrl, { recursive: true, force: true });
@@ -111,16 +111,14 @@ export function netlifyEdgeFunctions({ dist }: NetlifyEdgeFunctionsOptions = {})
 	let _config: AstroConfig;
 	let entryFile: string;
 	let _buildConfig: BuildConfig;
-	let needsBuildConfig = false;
 	let _vite: any;
 	return {
 		name: '@e-xisto/astro-netlify/edge-functions',
 		hooks: {
 			'astro:config:setup': ({ config, updateConfig }) => {
-				needsBuildConfig = !config.build.client;
 				// Add a plugin that shims the global environment.
 				const injectPlugin: VitePlugin = {
-					name: '@e-xisto/astro-netlify/plugin-inject',
+					name: '@astrojs/netlify/plugin-inject',
 					generateBundle(_options, bundle) {
 						if (_buildConfig.serverEntry in bundle) {
 							const chunk = bundle[_buildConfig.serverEntry];
@@ -135,7 +133,7 @@ export function netlifyEdgeFunctions({ dist }: NetlifyEdgeFunctionsOptions = {})
 					outDir,
 					build: {
 						client: outDir,
-						server: new URL('./functions/', config.root),
+						server: new URL('./.netlify/edge-functions/', config.root),
 						serverEntry: 'entry.js',
 					},
 					vite: {
@@ -154,15 +152,6 @@ export function netlifyEdgeFunctions({ dist }: NetlifyEdgeFunctionsOptions = {})
 					console.warn(
 						`[@e-xisto/astro-netlify] Otherwise, this adapter is not required to deploy a static site to Netlify.`
 					);
-				}
-			},
-			'astro:build:start': ({ buildConfig }) => {
-				if (needsBuildConfig) {
-					buildConfig.client = _config.outDir;
-					buildConfig.server = new URL('./functions/', _config.root);
-					buildConfig.serverEntry = 'entry.js';
-					_buildConfig = buildConfig;
-					entryFile = buildConfig.serverEntry.replace(/\.m?js/, '');
 				}
 			},
 			'astro:build:setup': ({ vite, target }) => {
